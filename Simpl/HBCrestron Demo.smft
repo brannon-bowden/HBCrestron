@@ -1,0 +1,4 @@
+<Device Model="PRO3" Name="PRO3.">
+   <Network Type="Cresnet" Id="04"/>
+   <Network Type="Ethernet" Id="05"/>
+</Device>
