@@ -141,16 +141,9 @@
   SymJam=NonExclusive
   FileName=HBCrestron Remote Lightbulb Module.ush
   SIMPLPlusModuleEncoding=0
-  clz1=StartupProjectDemoProcessor_v8_0
-  clz2=Broadlink
-  clz3=HBCrestronLibrary
-  clz4=JSON Api Processor
-  clz5=Wemo Control and Feedback v1.0
-  clz6=Honeywell Lyric
-  clz7=Life360 v1_0
-  clz8=InternetStatus
-  clz9=Pushbullet
-  clz10=Crestron.RemoteServiceSimpl
+  clz1=Crestron.RemoteServiceSimpl
+  clz2=HBCrestronLibrary
+  clz3=Broadlink
 [END]
 [BEGIN]
   ObjTp=Dp

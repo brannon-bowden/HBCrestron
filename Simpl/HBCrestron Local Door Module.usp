@@ -175,31 +175,43 @@ String_Function MyStrFunction1()
 *******************************************************************************************/
 Push DoorOpen_Fb
 {
-	    HBDoor.SetTargetPositionFeedback(DeviceName,100);
-	    HBDoor.SetCurrentPositionFeedback(DeviceName,100);
+	While(StartupLock)
+		processlogic();
+    HBDoor.SetTargetPositionFeedback(DeviceName,100);
+    HBDoor.SetCurrentPositionFeedback(DeviceName,100);
 }
 
 Push DoorClosed_Fb
 {
+	While(StartupLock)
+		processlogic();
 	    HBDoor.SetTargetPositionFeedback(DeviceName,0);
 	    HBDoor.SetCurrentPositionFeedback(DeviceName,0);
 }
 
 Push DoorClosing_Fb
 {
+	While(StartupLock)
+		processlogic();
 		HBDoor.SetPositionStateFeedback(DeviceName,0);
 }
 Push DoorOpening_Fb
 {
+	While(StartupLock)
+		processlogic();
 		HBDoor.SetPositionStateFeedback(DeviceName,1);
 }
 Push DoorStopped_Fb
 {
+	While(StartupLock)
+		processlogic();
 		HBDoor.SetPositionStateFeedback(DeviceName,2);
 }
 
 Change DoorObstructionDetected_Fb
 {
+	While(StartupLock)
+		processlogic();
 	If(DoorObstructionDetected_Fb = on)
 		HBDoor.SetObstructionDetectedFeedback(DeviceName,1);
 	else
@@ -244,6 +256,7 @@ EVENTHANDLER _DoorEvent(HBCrestronEventArgs e)
 EVENTHANDLER _ConnectionEvent(EventArgs e)
 {
 	HBDoor.AddDevice(DeviceName,SupportsHoldPosition,SupportsObstructionDetected,"Local");
+	StartupLock = 0;
 }
 
 /*******************************************************************************************
@@ -253,6 +266,8 @@ EVENTHANDLER _ConnectionEvent(EventArgs e)
 *******************************************************************************************/
 Function Main()
 {
+	StartupLock = 1;
+	WaitForInitializationComplete();
 	RegisterEvent(HBCrestron,HBWebSocketClientConnectionEvent,_ConnectionEvent);
 	RegisterEvent(HBDoor,DoorEvent,_DoorEvent);
 }

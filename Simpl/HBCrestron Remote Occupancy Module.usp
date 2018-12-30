@@ -50,12 +50,9 @@ Comments:
   (Uncomment and declare inputs and outputs as needed)
 *******************************************************************************************/
 // DIGITAL_INPUT 
-DIGITAL_INPUT _SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,RemoveDevice,ResetDeviceConfig,ModeOff_Fb,ModeHeat_Fb,ModeCool_Fb,ModeAuto_Fb;
-ANALOG_INPUT CurrentTemperature_Fb,CurrentHumidity_Fb,SingleSetpoint_Fb,CoolSetpoint_Fb,HeatSetPoint_Fb;
+DIGITAL_INPUT _SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,RemoveDevice,ResetDeviceConfig,Occupancy_Fb,StatusActive_Fb,StatusFault_Fb,StatusTampered_Fb,StatusLowBattery_Fb;
 
-DIGITAL_OUTPUT _SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_,ModeOff,ModeHeat,ModeCool,ModeAuto;
-ANALOG_OUTPUT SingleSetpoint,CoolSetpoint,HeatSetPoint,TargetHumidity;
-
+DIGITAL_OUTPUT _SKIP_,_SKIP_,_SKIP_,_SKIP_,_SKIP_;
 // ANALOG_INPUT 
 // STRING_INPUT 
 // BUFFER_INPUT 
@@ -81,14 +78,14 @@ ANALOG_OUTPUT SingleSetpoint,CoolSetpoint,HeatSetPoint,TargetHumidity;
 // LONG_INTEGER_PARAMETER
 // SIGNED_LONG_INTEGER_PARAMETER
 // STRING_PARAMETER
-INTEGER_PARAMETER SupportsHumidity,SupportsCoolSetpoint,SupportsHeatSetpoint;
+INTEGER_PARAMETER SupportsStatusActive,SupportsStatusFault,SupportsStatusTampered,SupportsStatusLowBattery;
 STRING_PARAMETER DeviceName[100];
 
 /*******************************************************************************************
   Parameter Properties
   (Uncomment and declare parameter properties as needed)
 *******************************************************************************************/
-#BEGIN_PARAMETER_PROPERTIES SupportsHumidity,SupportsCoolSetpoint,SupportsHeatSetpoint
+#BEGIN_PARAMETER_PROPERTIES SupportsStatusActive,SupportsStatusFault,SupportsStatusTampered,SupportsStatusLowBattery
 	propDefaultValue = 0d;
 	propList = { 0d, "False" }, { 1d,"True"};
 #END_PARAMETER_PROPERTIES
@@ -127,7 +124,6 @@ MyStruct1 struct;
          For example, in Function Main: myString = "";
 *******************************************************************************************/
 // INTEGER
-INTEGER StartupLock;
 // LONG_INTEGER
 // SIGNED_INTEGER
 // SIGNED_LONG_INTEGER
@@ -175,131 +171,88 @@ String_Function MyStrFunction1()
   Event Handlers
   (Uncomment and declare additional event handlers as needed)
 *******************************************************************************************/
-Push ModeOff_Fb
+Change Occupancy_Fb
 {
-	While(StartupLock)
-		processlogic();
-	HBThermostat.SetTargetHeatingCoolingState(DeviceName,0);
-	HBThermostat.SetCurrentHeatingCoolingStateFeedback(DeviceName,0);
-}
-    
-Push ModeHeat_Fb
-{
-	While(StartupLock)
-		processlogic();
-	HBThermostat.SetTargetHeatingCoolingState(DeviceName,1);
-	HBThermostat.SetCurrentHeatingCoolingStateFeedback(DeviceName,1);
+	If(Occupancy_Fb = on)
+	{
+	    HBOccupancy.SetOccupancyDetectedFeedback(DeviceName,1);
+	}
+	Else
+	{
+	    HBOccupancy.SetOccupancyDetectedFeedback(DeviceName,0);
+	}
 }
 
-Push ModeCool_Fb
+Change StatusActive_Fb
 {
-	While(StartupLock)
-		processlogic();
-	HBThermostat.SetTargetHeatingCoolingState(DeviceName,2);
-	HBThermostat.SetCurrentHeatingCoolingStateFeedback(DeviceName,2);
+	If(StatusActive_Fb = on)
+	{
+	    HBOccupancy.SetStatusActiveFeedback(DeviceName,1);
+	}
+	Else
+	{
+	    HBOccupancy.SetStatusActiveFeedback(DeviceName,0);
+	}
 }
 
-Push ModeAuto_Fb
+Change StatusFault_Fb
 {
-	While(StartupLock)
-		processlogic();
-	HBThermostat.SetTargetHeatingCoolingState(DeviceName,3);
-	HBThermostat.SetCurrentHeatingCoolingStateFeedback(DeviceName,3);
+	If(StatusFault_Fb = on)
+	{
+	    HBOccupancy.SetStatusFaultFeedback(DeviceName,1);
+	}
+	Else
+	{
+	    HBOccupancy.SetStatusFaultFeedback(DeviceName,0);
+	}
 }
 
-Change CurrentTemperature_Fb
+Change StatusTampered_Fb
 {
-	While(StartupLock)
-		processlogic();
-	HBThermostat.SetCurrentTemperatureFeedback(DeviceName,CurrentTemperature_Fb);
+	If(StatusTampered_Fb = on)
+	{
+	    HBOccupancy.SetStatusTamperedFeedback(DeviceName,1);
+	}
+	Else
+	{
+	    HBOccupancy.SetStatusTamperedFeedback(DeviceName,0);
+	}
 }
 
-Change CurrentHumidity_Fb
+Change StatusLowBattery_Fb
 {
-	While(StartupLock)
-		processlogic();
-	HBThermostat.SetCurrentRelativeHumidityFeedback(DeviceName,CurrentHumidity_Fb);
-}
-Change SingleSetpoint_Fb
-{
-	While(StartupLock)
-		processlogic();
-	HBThermostat.SetTargetTemperature(DeviceName,SingleSetpoint_Fb);
-}
-
-Change CoolSetpoint_Fb
-{
-	While(StartupLock)
-		processlogic();
-	HBThermostat.SetCoolingThresholdTemperatureFeedback(DeviceName,CoolSetpoint_Fb);
+	If(StatusLowBattery_Fb = on)
+	{
+	    HBOccupancy.SetStatusLowBatteryFeedback(DeviceName,1);
+	}
+	Else
+	{
+	    HBOccupancy.SetStatusLowBatteryFeedback(DeviceName,0);
+	}
 }
 
-Change HeatSetpoint_Fb
-{
-	While(StartupLock)
-		processlogic();
-	HBThermostat.SetHeatingThresholdTemperatureFeedback(DeviceName,HeatSetpoint_Fb);
-}
-      
 PUSH RemoveDevice
 {
-	HBThermostat.RemoveDevice(DeviceName);
+	HBOccupancy.RemoveDevice(DeviceName);
 } 
 PUSH ResetDeviceConfig
 {
-	HBThermostat.RemoveDevice(DeviceName);
-	HBThermostat.AddDevice(DeviceName,SupportsHumidity,SupportsHumidity,SupportsHeatSetpoint,SupportsCoolSetpoint,"Local");
-	HBThermostat.SetTemperatureDisplayUnitsFeedback(DeviceName,1);
+	HBOccupancy.RemoveDevice(DeviceName);
+	HBOccupancy.AddDevice(DeviceName,SupportsStatusActive,SupportsStatusFault,SupportsStatusTampered,SupportsStatusLowBattery,"Local");
 }
 
-EVENTHANDLER _ThermostatEvent(HBCrestronEventArgs e)
+
+EVENTHANDLER _OccupancyEvent(OccupancyEventArgs e)
 {
 	if(e.Name = DeviceName)
 	{
-    	if(e.Characteristic = "TargetHeatingCoolingState")
-		{
-            if(e.Value = 0)
-			{
-            	Pulse(10,ModeOff);
-			}
-			else if(e.Value = 1)
-			{
-            	Pulse(10,ModeHeat);
-			}
-            else if(e.Value = 2)
-			{
-            	Pulse(10,ModeCool);
-			}
-            else if(e.Value = 3)
-			{
-            	Pulse(10,ModeAuto);
-			}
-		} 	
-		else if(e.Characteristic = "TargetTemperature")
-		{
-        	SingleSetpoint = e.Value;
-		}
-		else if(e.Characteristic = "HeatingThresholdTemperature")
-		{
-        	HeatSetpoint = e.Value;
-		}
-		else if(e.Characteristic = "CoolingThresholdTemperature")
-		{
-        	CoolSetpoint = e.Value;
-		}
-		else if(e.Characteristic = "TargetRelativeHumidity")
-		{
-        	TargetHumidity = e.Value;
-		}
-
+		
 	}	
 }
 
 EVENTHANDLER _ConnectionEvent(EventArgs e)
 {
-	HBThermostat.AddDevice(DeviceName,SupportsHumidity,SupportsHumidity,SupportsHeatSetpoint,SupportsCoolSetpoint,"Local");
-	HBThermostat.SetTemperatureDisplayUnitsFeedback(DeviceName,1);
-	StartupLock = 0;
+	HBOccupancy.AddDevice(DeviceName,SupportsStatusActive,SupportsStatusFault,SupportsStatusTampered,SupportsStatusLowBattery,"Local");
 }
 
 /*******************************************************************************************
@@ -309,10 +262,9 @@ EVENTHANDLER _ConnectionEvent(EventArgs e)
 *******************************************************************************************/
 Function Main()
 {
-	StartupLock = 1;
 	waitforinitializationcomplete();
-	RegisterEvent(HBCrestron,HBWebSocketClientConnectionEvent,_ConnectionEvent);
-	RegisterEvent(HBThermostat,ThermostatEvent,_ThermostatEvent);
+	RegisterEvent(HBCrestron,ConnectionEvent,_ConnectionEvent);
+	RegisterEvent(HBOccupancy,OccupancyEvent,_OccupancyEvent);
 }
 
 

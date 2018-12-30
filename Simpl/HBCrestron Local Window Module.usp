@@ -175,31 +175,43 @@ String_Function MyStrFunction1()
 *******************************************************************************************/
 Push WindowOpen_Fb
 {
+	While(StartupLock)
+		processlogic();
 	    HBWindow.SetTargetPositionFeedback(DeviceName,100);
 	    HBWindow.SetCurrentPositionFeedback(DeviceName,100);
 }
 
 Push WindowClosed_Fb
 {
+	While(StartupLock)
+		processlogic();
 	    HBWindow.SetTargetPositionFeedback(DeviceName,0);
 	    HBWindow.SetCurrentPositionFeedback(DeviceName,0);
 }
 
 Push WindowClosing_Fb
 {
+	While(StartupLock)
+		processlogic();
 		HBWindow.SetPositionStateFeedback(DeviceName,0);
 }
 Push WindowOpening_Fb
 {
+	While(StartupLock)
+		processlogic();
 		HBWindow.SetPositionStateFeedback(DeviceName,1);
 }
 Push Windowstopped_Fb
 {
+	While(StartupLock)
+		processlogic();
 		HBWindow.SetPositionStateFeedback(DeviceName,2);
 }
 
 Change WindowObstructionDetected_Fb
 {
+	While(StartupLock)
+		processlogic();
 	If(WindowObstructionDetected_Fb = on)
 		HBWindow.SetObstructionDetectedFeedback(DeviceName,1);
 	else
@@ -244,6 +256,7 @@ EVENTHANDLER _WindowEvent(HBCrestronEventArgs e)
 EVENTHANDLER _ConnectionEvent(EventArgs e)
 {
 	HBWindow.AddDevice(DeviceName,SupportsHoldPosition,SupportsObstructionDetected,"Local");
+	StartupLock = 0;
 }
 
 /*******************************************************************************************
@@ -253,6 +266,8 @@ EVENTHANDLER _ConnectionEvent(EventArgs e)
 *******************************************************************************************/
 Function Main()
 {
+	StartupLock = 1;
+	WaitForInitializationComplete();
 	RegisterEvent(HBCrestron,HBWebSocketClientConnectionEvent,_ConnectionEvent);
 	RegisterEvent(HBWindow,WindowEvent,_WindowEvent);
 }

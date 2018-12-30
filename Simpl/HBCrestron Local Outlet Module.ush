@@ -20,8 +20,8 @@
   Name=HBCrestron Local Outlet Module
   SmplCName=HBCrestron Local Outlet Module.usp
   Code=1
-  SysRev5=4.000
-  SMWRev=2.02.05
+  SysRev5=4.006
+  SMWRev=3.00.00
   InputCue1=[~UNUSED~]
   InputSigType1=Digital
   InputCue2=RemoveDevice
@@ -78,7 +78,8 @@
   SymJam=NonExclusive
   FileName=HBCrestron Local Outlet Module.ush
   SIMPLPlusModuleEncoding=0
-  clz1=HBCrestronLibrary
+  clz1=Crestron.RemoteServiceSimpl
+  clz2=HBCrestronLibrary
 [END]
 [BEGIN]
   ObjTp=Dp

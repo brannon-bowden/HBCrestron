@@ -26,7 +26,8 @@ namespace HBCrestronLibrary
     {
         private static CTimer _hbWebSocketClientConnectionCheck;
         public static event ConnectionEventHandler HBWebSocketClientConnectionEvent;        
-        private static WebSocketClient _hbWebSocketClient;               
+        private static WebSocketClient _hbWebSocketClient;
+        private static bool _hbWebSocketClientConnected;
 
         private static CTimer _hbHttpClientPollTimer;
         private static HttpClient _hbHttpClient = new HttpClient();
@@ -63,7 +64,7 @@ namespace HBCrestronLibrary
             //CrestronConsole.PrintLine("DataSent - {0}", jsondata);
             try
             {
-                if(_hbWebSocketClient.Connected == true) //The only edge case issue is adding devices, which shouldn't happen unless a connected event fires. HomeBridge will request the data again on it's own.
+                if (_hbWebSocketClientConnected == true) //The only edge case issue is adding devices, which shouldn't happen unless a connected event fires. HomeBridge will request the data again on it's own.
                 _hbWebSocketClient.Send(Encoding.Default.GetBytes(jsondata), (uint)Encoding.Default.GetBytes(jsondata).Length, WebSocketClient.WEBSOCKET_PACKET_TYPES.LWS_WS_OPCODE_07__TEXT_FRAME);
             }
             catch (Exception)
@@ -76,16 +77,19 @@ namespace HBCrestronLibrary
             if (result == WebSocketClient.WEBSOCKET_RESULT_CODES.WEBSOCKET_CLIENT_SUCCESS)
             {
                 _hbWebSocketClient.ReceiveAsync();
+                _hbWebSocketClientConnected = true;
                 HBWebSocketClientConnectionEvent(new EventArgs());
             }
             else
             {
+                _hbWebSocketClientConnected = false;
                 hbWebSocketClient_OnClose(WebSocketClient.WEBSOCKET_RESULT_CODES.WEBSOCKET_CLIENT_ERROR, null);
             }
             return 0;
         }
         static int hbWebSocketClient_OnClose(WebSocketClient.WEBSOCKET_RESULT_CODES result, object o)
         {
+            _hbWebSocketClientConnected = false;
             _hbWebSocketClientConnectionCheck = new CTimer(hbWebSocketClient_CheckConnection, 3000);
             return 0;
         }

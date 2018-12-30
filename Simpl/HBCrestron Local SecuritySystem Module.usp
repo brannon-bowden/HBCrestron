@@ -125,6 +125,7 @@ MyStruct1 struct;
          For example, in Function Main: myString = "";
 *******************************************************************************************/
 // INTEGER
+INTEGER StartupLock;
 // LONG_INTEGER
 // SIGNED_INTEGER
 // SIGNED_LONG_INTEGER
@@ -174,32 +175,44 @@ String_Function MyStrFunction1()
 *******************************************************************************************/
 Push AlarmStay_Fb
 {
+	While(StartupLock)
+		processlogic();
 	HBSecuritySystem.SetSecuritySystemTargetState(DeviceName,0);
 	HBSecuritySystem.SetSecuritySystemCurrentState(DeviceName,0);
 }
 Push AlarmAway_Fb
 {
+	While(StartupLock)
+		processlogic();
 	HBSecuritySystem.SetSecuritySystemTargetState(DeviceName,1);
 	HBSecuritySystem.SetSecuritySystemCurrentState(DeviceName,1);
 
 }
 Push AlarmNight_Fb
 {
+	While(StartupLock)
+		processlogic();
 	HBSecuritySystem.SetSecuritySystemTargetState(DeviceName,2);
 	HBSecuritySystem.SetSecuritySystemCurrentState(DeviceName,2);
 }
 Push AlarmDisarm_Fb
 {
+	While(StartupLock)
+		processlogic();
 	HBSecuritySystem.SetSecuritySystemTargetState(DeviceName,3);
 	HBSecuritySystem.SetSecuritySystemCurrentState(DeviceName,3);
 }
 Push AlarmTriggered_Fb
 {
+	While(StartupLock)
+		processlogic();
 	HBSecuritySystem.SetSecuritySystemCurrentState(DeviceName,4);
 }
 
 Change StatusFault_Fb
 {
+	While(StartupLock)
+		processlogic();
 	If(StatusFault_Fb = on)
 	{
 	    HBSecuritySystem.SetStatusFaultFeedback(DeviceName,1);
@@ -212,6 +225,8 @@ Change StatusFault_Fb
 
 Change StatusTampered_Fb
 {
+	While(StartupLock)
+		processlogic();
 	If(StatusTampered_Fb = on)
 	{
 	    HBSecuritySystem.SetStatusTamperedFeedback(DeviceName,1);
@@ -263,6 +278,7 @@ EVENTHANDLER _SecuritySystemEvent(HBCrestronEventArgs e)
 EVENTHANDLER _ConnectionEvent(EventArgs e)
 {
 	HBSecuritySystem.AddDevice(DeviceName,SupportsStatusFault,SupportsStatusTampered,"Local");
+	StartupLock = 0;
 }
 
 /*******************************************************************************************
@@ -272,6 +288,7 @@ EVENTHANDLER _ConnectionEvent(EventArgs e)
 *******************************************************************************************/
 Function Main()
 {
+	StartupLock = 1;
 	waitforinitializationcomplete();
 	RegisterEvent(HBCrestron,HBWebSocketClientConnectionEvent,_ConnectionEvent);
 	RegisterEvent(HBSecuritySystem,SecuritySystemEvent,_SecuritySystemEvent);

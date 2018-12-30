@@ -124,6 +124,7 @@ MyStruct1 struct;
          For example, in Function Main: myString = "";
 *******************************************************************************************/
 // INTEGER
+INTEGER StartupLock;
 // LONG_INTEGER
 // SIGNED_INTEGER
 // SIGNED_LONG_INTEGER
@@ -173,6 +174,8 @@ String_Function MyStrFunction1()
 *******************************************************************************************/
 Change Occupancy_Fb
 {
+	While(StartupLock)
+		processlogic();
 	If(Occupancy_Fb = on)
 	{
 	    HBOccupancySensor.SetOccupancyDetectedFeedback(DeviceName,1);
@@ -185,6 +188,8 @@ Change Occupancy_Fb
 
 Change StatusActive_Fb
 {
+	While(StartupLock)
+		processlogic();
 	If(StatusActive_Fb = on)
 	{
 	    HBOccupancySensor.SetStatusActiveFeedback(DeviceName,1);
@@ -197,6 +202,8 @@ Change StatusActive_Fb
 
 Change StatusFault_Fb
 {
+	While(StartupLock)
+		processlogic();
 	If(StatusFault_Fb = on)
 	{
 	    HBOccupancySensor.SetStatusFaultFeedback(DeviceName,1);
@@ -209,6 +216,8 @@ Change StatusFault_Fb
 
 Change StatusTampered_Fb
 {
+	While(StartupLock)
+		processlogic();
 	If(StatusTampered_Fb = on)
 	{
 	    HBOccupancySensor.SetStatusTamperedFeedback(DeviceName,1);
@@ -221,6 +230,8 @@ Change StatusTampered_Fb
 
 Change StatusLowBattery_Fb
 {
+	While(StartupLock)
+		processlogic();
 	If(StatusLowBattery_Fb = on)
 	{
 	    HBOccupancySensor.SetStatusLowBatteryFeedback(DeviceName,1);
@@ -253,6 +264,7 @@ EVENTHANDLER _OccupancySensorEvent(HBCrestronEventArgs e)
 EVENTHANDLER _ConnectionEvent(EventArgs e)
 {
 	HBOccupancySensor.AddDevice(DeviceName,SupportsStatusActive,SupportsStatusFault,SupportsStatusTampered,SupportsStatusLowBattery,"Local");
+	StartupLock = 0;
 }
 
 /*******************************************************************************************
@@ -262,6 +274,7 @@ EVENTHANDLER _ConnectionEvent(EventArgs e)
 *******************************************************************************************/
 Function Main()
 {
+	StartupLock = 1;
 	waitforinitializationcomplete();
 	RegisterEvent(HBCrestron,HBWebSocketClientConnectionEvent,_ConnectionEvent);
 	RegisterEvent(HBOccupancySensor,OccupancySensorEvent,_OccupancySensorEvent);

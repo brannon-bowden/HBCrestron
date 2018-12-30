@@ -119,6 +119,7 @@ MyStruct1 struct;
          For example, in Function Main: myString = "";
 *******************************************************************************************/
 // INTEGER
+INTEGER StartupLock;
 // LONG_INTEGER
 // SIGNED_INTEGER
 // SIGNED_LONG_INTEGER
@@ -168,6 +169,8 @@ String_Function MyStrFunction1()
 *******************************************************************************************/
 CHANGE State_Fb
 {
+	While(StartupLock)
+		processlogic();
 	If(State_Fb = on)
 	    HBOutlet.SetOnFeedback(DeviceName,1);
 	else
@@ -176,6 +179,8 @@ CHANGE State_Fb
 
 CHANGE OutletInUse_Fb
 {
+	While(StartupLock)
+		processlogic();
 	If(OutletInUse_Fb = on)
 	    HBOutlet.SetOutletInUseFeedback(DeviceName,1);
 	else
@@ -214,6 +219,7 @@ EVENTHANDLER _OutletEvent(HBCrestronEventArgs e)
 EVENTHANDLER _ConnectionEvent(EventArgs e)
 {
 	HBOutlet.AddDevice(DeviceName,"Local");	
+	StartupLock = 0;
 }
 
 /*******************************************************************************************
@@ -223,6 +229,7 @@ EVENTHANDLER _ConnectionEvent(EventArgs e)
 *******************************************************************************************/
 Function Main()
 {
+	StartupLock = 1;
 	waitforinitializationcomplete();
 	RegisterEvent(HBCrestron,HBWebSocketClientConnectionEvent,_ConnectionEvent);
 	RegisterEvent(HBOutlet,OutletEvent,_OutletEvent);

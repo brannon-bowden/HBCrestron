@@ -125,6 +125,7 @@ MyStruct1 struct;
          For example, in Function Main: myString = "";
 *******************************************************************************************/
 // INTEGER
+INTEGER StartupLock;
 // LONG_INTEGER
 // SIGNED_INTEGER
 // SIGNED_LONG_INTEGER
@@ -174,35 +175,47 @@ String_Function MyStrFunction1()
 *******************************************************************************************/
 Push GarageDoorOpen_Fb
 {
+	While(StartupLock)
+		processlogic();
 	    HBGarageDoor.SetTargetDoorStateFeedback(DeviceName,0);
 	    HBGarageDoor.SetCurrentDoorStateFeedback(DeviceName,0);
 }
 
 Push GarageDoorClosed_Fb
 {
+	While(StartupLock)
+		processlogic();
 	    HBGarageDoor.SetTargetDoorStateFeedback(DeviceName,1);
 	    HBGarageDoor.SetCurrentDoorStateFeedback(DeviceName,1);
 }
 
 Push GarageDoorClosing_Fb
 {
+	While(StartupLock)
+		processlogic();
 	    HBGarageDoor.SetTargetDoorStateFeedback(DeviceName,3);
 	    HBGarageDoor.SetCurrentDoorStateFeedback(DeviceName,3);
 
 }
 Push GarageDoorOpening_Fb
 {
+	While(StartupLock)
+		processlogic();
 	    HBGarageDoor.SetTargetDoorStateFeedback(DeviceName,2);
 	    HBGarageDoor.SetCurrentDoorStateFeedback(DeviceName,2);
 }
 Push GarageDoorStopped_Fb
 {
+	While(StartupLock)
+		processlogic();
 	    HBGarageDoor.SetTargetDoorStateFeedback(DeviceName,4);
 	    HBGarageDoor.SetCurrentDoorStateFeedback(DeviceName,4);
 }
 
 Change GarageDoorObstructionDetected_Fb
 {
+	While(StartupLock)
+		processlogic();
 	If(GarageDoorObstructionDetected_Fb = on)
 		HBGarageDoor.SetObstructionDetectedFeedback(DeviceName,1);
 	else
@@ -240,6 +253,7 @@ EVENTHANDLER _GarageDoorEvent(HBCrestronEventArgs e)
 EVENTHANDLER _ConnectionEvent(EventArgs e)
 {
 	HBGarageDoor.AddDevice(DeviceName,SupportsHoldPosition,SupportsObstructionDetected,"Local");
+	StartupLock = 0;
 }
 
 /*******************************************************************************************
@@ -249,6 +263,7 @@ EVENTHANDLER _ConnectionEvent(EventArgs e)
 *******************************************************************************************/
 Function Main()
 {
+	StartupLock = 1;
 	waitforinitializationcomplete();
 	RegisterEvent(HBCrestron,HBWebSocketClientConnectionEvent,_ConnectionEvent);
 	RegisterEvent(HBGarageDoor,GarageDoorEvent,_GarageDoorEvent);

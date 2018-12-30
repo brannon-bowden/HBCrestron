@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Crestron.SimplSharp;
 using HBCrestronLibrary.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -102,6 +103,7 @@ namespace HBCrestronLibrary.Accessories.Lightbulb
         public static void AddDevice(string name, ushort supportsBrightness, ushort supportsHue, ushort supportsSaturation, ushort supportsColorTemperature, ushort supportsRGB, string deviceLocation)
         {
             Lightbulbs.Add(new Lightbulb {Name = name, SupportsBrightness = supportsBrightness, SupportsHue = supportsHue, SupportsSaturation = supportsSaturation, SupportsColorTemperature = supportsColorTemperature, SupportsRGB = supportsRGB, DeviceLocation = deviceLocation});
+            
             if (deviceLocation == "Local")
             {
                 var tempAddLightbulbPayload = new AddLightbulbPayload();
@@ -114,6 +116,7 @@ namespace HBCrestronLibrary.Accessories.Lightbulb
                 HBCrestron.SendWebSocketData(JsonConvert.SerializeObject(tempAddObject));
             }
         }
+
         public static void RemoveDevice(string name)
         {
             var tempRemoveObject = new RemoveObject();

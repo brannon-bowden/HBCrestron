@@ -192,6 +192,8 @@ Function SetOn()
 *******************************************************************************************/
 CHANGE State_Fb
 {
+	while(StartupLock)
+		processlogic();
 	If(State_Fb = on)
 	    HBLightbulb.SetOnFeedback(DeviceName,1);
 	else
@@ -201,6 +203,8 @@ CHANGE State_Fb
     
 Change Brightness_Fb
 {
+	while(StartupLock)
+		processlogic();
     HBLightbulb.SetBrightnessFeedback(DeviceName,Brightness_Fb);
 //	CancelWait(BrightnessFeedbackWait);
 //	SetBrightnessFeedback();
@@ -208,28 +212,40 @@ Change Brightness_Fb
 
 Change Hue_Fb
 {
+	while(StartupLock)
+		processlogic();
     HBLightbulb.SetHueFeedback(DeviceName,Hue_Fb);
 }
 
 Change Saturation_Fb
 {
+	while(StartupLock)
+		processlogic();
     HBLightbulb.SetSaturationFeedback(DeviceName,Saturation_Fb);
 }
 
 Change ColorTemperature_Fb
 {
+	while(StartupLock)
+		processlogic();
     HBLightbulb.SetColorTemperatureFeedback(DeviceName,ColorTemperature_Fb);
 }
 Change Red_Fb
 {
+	while(StartupLock)
+		processlogic();
 	HBLightbulb.SetRGBFeedback(DeviceName,Red_Fb,Green_Fb,Blue_Fb);
 }
 Change Green_Fb
 {
+	while(StartupLock)
+		processlogic();
 	HBLightbulb.SetRGBFeedback(DeviceName,Red_Fb,Green_Fb,Blue_Fb);
 }
 Change Blue_Fb
 {
+	while(StartupLock)
+		processlogic();
 	HBLightbulb.SetRGBFeedback(DeviceName,Red_Fb,Green_Fb,Blue_Fb);
 }
        
@@ -294,9 +310,7 @@ EVENTHANDLER _LightbulbEvent(HBCrestronEventArgs e)
 EVENTHANDLER _ConnectionEvent(EventArgs e)
 {
 	HBLightbulb.AddDevice(DeviceName,SupportsBrightness,SupportsHue,SupportsSaturation,SupportsColorTemperature,SupportsRGB,"Local");
-	HBLightbulb.SetOnFeedback(DeviceName,State_Fb);
-    HBLightbulb.SetBrightnessFeedback(DeviceName,Brightness_Fb);
-	HBLightbulb.SetRGBFeedback(DeviceName,Red_Fb,Green_Fb,Blue_Fb);
+	StartupLock = 0;
 }
 
 /*******************************************************************************************
@@ -306,6 +320,8 @@ EVENTHANDLER _ConnectionEvent(EventArgs e)
 *******************************************************************************************/
 Function Main()
 {
+	StartupLock = 1;
+	WaitForInitializationComplete();
 	RegisterEvent(HBCrestron,HBWebSocketClientConnectionEvent,_ConnectionEvent);
 	RegisterEvent(HBLightbulb,LightbulbEvent,_LightbulbEvent);
 }

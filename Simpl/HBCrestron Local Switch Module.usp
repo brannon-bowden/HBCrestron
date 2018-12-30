@@ -120,6 +120,7 @@ MyStruct1 struct;
          For example, in Function Main: myString = "";
 *******************************************************************************************/
 // INTEGER
+INTEGER StartupLock;
 // LONG_INTEGER
 // SIGNED_INTEGER
 // SIGNED_LONG_INTEGER
@@ -169,6 +170,8 @@ String_Function MyStrFunction1()
 *******************************************************************************************/
 CHANGE State_Fb
 {
+	While(StartupLock)
+		processlogic();
 	If(State_Fb = on)
 	    HBSwitch.SetOnFeedback(DeviceName,1);
 	else
@@ -206,6 +209,7 @@ EVENTHANDLER _SwitchEvent(HBCrestronEventArgs e)
 EVENTHANDLER _ConnectionEvent(EventArgs e)
 {
 	HBSwitch.AddDevice(DeviceName,"Local");	
+	StartupLock = 0;
 }
 
 /*******************************************************************************************
@@ -215,6 +219,7 @@ EVENTHANDLER _ConnectionEvent(EventArgs e)
 *******************************************************************************************/
 Function Main()
 {
+	StartupLock = 1;
 	waitforinitializationcomplete();
 	RegisterEvent(HBCrestron,HBWebSocketClientConnectionEvent,_ConnectionEvent);
 	RegisterEvent(HBSwitch,SwitchEvent,_SwitchEvent);

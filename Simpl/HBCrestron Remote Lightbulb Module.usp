@@ -226,7 +226,7 @@ PUSH ResetDeviceConfig
 	HBLightbulb.AddDevice(DeviceName,SupportsBrightness,SupportsHue,SupportsSaturation,SupportsColorTemperature,SupportsRGB,"Remote");
 }
 
-EVENTHANDLER _LightbulbEvent(LightbulbEventArgs e)
+EVENTHANDLER _LightbulbEvent(HBCrestronEventArgs e)
 {
 	if(e.Name = DeviceName)
 	{
