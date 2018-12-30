@@ -1,5 +1,5 @@
 # HBCrestron
-Crestron Simpl# Library for HomeBridge. 
+Crestron Simpl# Library for HomeBridge (Includes Simpl Windows Modules). 
 
 Important to note: This is a proof of concept library written for my personal home. This does not do anything without HomeBridge running on a seperate device, and with certain plugins installed. Currently I am unable to act as a full HomeKit Accessory Server, so I am using HomeBridge as that piece. 
 
