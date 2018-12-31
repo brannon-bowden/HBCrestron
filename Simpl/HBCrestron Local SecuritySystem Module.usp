@@ -289,7 +289,6 @@ EVENTHANDLER _ConnectionEvent(EventArgs e)
 Function Main()
 {
 	StartupLock = 1;
-	waitforinitializationcomplete();
 	RegisterEvent(HBCrestron,HBWebSocketClientConnectionEvent,_ConnectionEvent);
 	RegisterEvent(HBSecuritySystem,SecuritySystemEvent,_SecuritySystemEvent);
 }

@@ -20,8 +20,8 @@
   Name=HBCrestron Remote Configuration
   SmplCName=HBCrestron Remote Configuration.usp
   Code=1
-  SysRev5=4.000
-  SMWRev=2.02.05
+  SysRev5=4.006
+  SMWRev=3.00.00
   ParamCue1=[Reference Name]
   ParamCue2=HomeBridgeIP
   ParamSigType2=String
@@ -68,7 +68,9 @@
   SymJam=NonExclusive
   FileName=HBCrestron Remote Configuration.ush
   SIMPLPlusModuleEncoding=0
-  clz1=HBCrestronLibrary
+  clz1=Crestron.RemoteServiceSimpl
+  clz2=HBCrestronLibrary
+  clz3=Broadlink
 [END]
 [BEGIN]
   ObjTp=Dp

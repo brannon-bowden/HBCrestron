@@ -321,7 +321,6 @@ EVENTHANDLER _ConnectionEvent(EventArgs e)
 Function Main()
 {
 	StartupLock = 1;
-	WaitForInitializationComplete();
 	RegisterEvent(HBCrestron,HBWebSocketClientConnectionEvent,_ConnectionEvent);
 	RegisterEvent(HBLightbulb,LightbulbEvent,_LightbulbEvent);
 }

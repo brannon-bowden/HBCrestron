@@ -275,7 +275,6 @@ EVENTHANDLER _ConnectionEvent(EventArgs e)
 Function Main()
 {
 	StartupLock = 1;
-	waitforinitializationcomplete();
 	RegisterEvent(HBCrestron,HBWebSocketClientConnectionEvent,_ConnectionEvent);
 	RegisterEvent(HBOccupancySensor,OccupancySensorEvent,_OccupancySensorEvent);
 }

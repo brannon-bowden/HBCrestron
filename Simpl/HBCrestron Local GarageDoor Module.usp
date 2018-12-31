@@ -264,9 +264,9 @@ EVENTHANDLER _ConnectionEvent(EventArgs e)
 Function Main()
 {
 	StartupLock = 1;
-	waitforinitializationcomplete();
 	RegisterEvent(HBCrestron,HBWebSocketClientConnectionEvent,_ConnectionEvent);
 	RegisterEvent(HBGarageDoor,GarageDoorEvent,_GarageDoorEvent);
+	waitforinitializationcomplete();
 }
 
 
